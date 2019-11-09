@@ -11,6 +11,7 @@ public class GameController {
 
     private int numPlayers;
     private ControllerParams controllerParams;
+    int randomSuspect = 0;
 
     public GameController(int numPlayers){
         this.numPlayers = numPlayers;
@@ -84,7 +85,6 @@ public class GameController {
 
     public void voteSuspect(){
 
-        int randomSuspect = 0;
         List<Integer> suspectExceptionList = new ArrayList<Integer>();
         controllerParams.suspectArr = new Integer[numPlayers];
         Arrays.fill(controllerParams.suspectArr, 0);
@@ -98,13 +98,7 @@ public class GameController {
                 if(suspectExceptionList.size() < numPlayers)
                 randomSuspect = Util.randomInRange(numPlayers, suspectExceptionList);
 
-                if(currentPlayer.getRole() == Role.SHERLOCK){
-                    if(randomSuspect != controllerParams.randomKillerPos){
-                        int previousSuspect = randomSuspect;
-                        randomSuspect = Util.randomInRange(numPlayers, previousSuspect);
-                    }
-
-                }
+                sherlockValidation(currentPlayer, randomSuspect);
 
                 controllerParams.getPlayerList().get(i).setSuspects(randomSuspect);
                 controllerParams.suspectArr[randomSuspect] += 1;
@@ -116,6 +110,15 @@ public class GameController {
         }
 
         controllerParams.maxFrequency = Util.maxTwoFrequency(controllerParams.suspectArr, numPlayers);
+    }
+
+    public void sherlockValidation(Player currentPlayer, int randomSuspect){
+        if(currentPlayer.getRole() == Role.SHERLOCK){
+            if(randomSuspect != controllerParams.randomKillerPos){
+                int previousSuspect = randomSuspect;
+                this.randomSuspect = Util.randomInRange(numPlayers, previousSuspect);
+            }
+        }
     }
 
     private void healerValidation(Player currentPlayer, List<Integer> suspectExceptionList) {
