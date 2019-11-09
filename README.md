@@ -1,5 +1,9 @@
 # Sneak_Attack_Clean
 Hello TW ;-)
+
+## Running the code :
+Just import as a Java maven project to any of the well known IDEs and add a Run Configuration
+
 ```
 #Sample Execution :
 P0: INNOCENT
