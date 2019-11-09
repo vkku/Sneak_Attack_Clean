@@ -6,9 +6,6 @@ import me.vkku.sneakAttack.pojo.Player;
 import me.vkku.sneakAttack.util.Util;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class GameController {
 
@@ -29,8 +26,6 @@ public class GameController {
             System.out.println("Round " + (i+1));
             killInitialPlayer();
         }*/
-        //killInitialPlayer();
-        //voteSuspect();
         controllerParams.round = 0;
         while(!controllerParams.getKilledList().contains(controllerParams.randomKillerPos) && (controllerParams.killedList.size() < numPlayers)){
             System.out.println("** Round Starts **");
@@ -88,9 +83,7 @@ public class GameController {
             suspectExceptionList.clear();
             Player currentPlayer = controllerParams.getPlayerList().get(i);
             if( (currentPlayer.getState() == State.ALIVE) && (currentPlayer.getRole() == Role.INNOCENT || currentPlayer.getRole() == Role.HEALER) ){
-                if(currentPlayer.getRole() == Role.HEALER){
-                    suspectExceptionList.add(controllerParams.toBeHealed);
-                }
+                healerValidation(currentPlayer, suspectExceptionList);
                 suspectExceptionList.add(i);
                 suspectExceptionList.addAll(controllerParams.getKilledList());
                 if(suspectExceptionList.size() < numPlayers)
@@ -104,6 +97,12 @@ public class GameController {
         controllerParams.maxFrequency = Util.maxTwoFrequency(controllerParams.suspectArr, numPlayers);
     }
 
+    private void healerValidation(Player currentPlayer, List<Integer> suspectExceptionList) {
+        if(currentPlayer.getRole() == Role.HEALER){
+            suspectExceptionList.add(controllerParams.toBeHealed);
+        }
+    }
+
     public void killSuspects(){
         for (int i = 0 ; i < numPlayers ; i++){
             if(controllerParams.suspectArr[i] != 0){
@@ -114,8 +113,6 @@ public class GameController {
         System.out.println("The maximum suspect count is : " + controllerParams.maxFrequency.get(0));
 
         int maxFreq;
-        //for(int i = 0 ; i < controllerParams.maxFrequency.size() ; i++) {
-            //HACK
             maxFreq = controllerParams.maxFrequency.get(0);
             if (controllerParams.toBeHealed != maxFreq) {
                 controllerParams.getKilledList().add(maxFreq);
@@ -134,7 +131,6 @@ public class GameController {
                 }
                 System.out.println("Player P" + controllerParams.toBeHealed + " is healed by healer");
             }
-        //}
     }
 
     public void chooseToBeHealed(){

@@ -6,7 +6,7 @@ public class SneakAttackGame {
 
     public static void main(String[] args) {
 
-        GameController gameController = new GameController(6);
+        GameController gameController = new GameController(7);
         gameController.playGame();
 
     }
