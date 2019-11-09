@@ -15,6 +15,8 @@ public class ControllerParams {
     int healerPos;
     int round;
     int toBeHealed;
+    int sherlockSuspect;
+    int sherlockPos;
 
     public List<Player> getPlayerList() {
         return playerList;
@@ -46,5 +48,53 @@ public class ControllerParams {
 
     public void setHealerPos(int healerPos) {
         this.healerPos = healerPos;
+    }
+
+    public List<Integer> getMaxFrequency() {
+        return maxFrequency;
+    }
+
+    public void setMaxFrequency(List<Integer> maxFrequency) {
+        this.maxFrequency = maxFrequency;
+    }
+
+    public Integer[] getSuspectArr() {
+        return suspectArr;
+    }
+
+    public void setSuspectArr(Integer[] suspectArr) {
+        this.suspectArr = suspectArr;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public void setRound(int round) {
+        this.round = round;
+    }
+
+    public int getToBeHealed() {
+        return toBeHealed;
+    }
+
+    public void setToBeHealed(int toBeHealed) {
+        this.toBeHealed = toBeHealed;
+    }
+
+    public int getSherlockSuspect() {
+        return sherlockSuspect;
+    }
+
+    public void setSherlockSuspect(int sherlockSuspect) {
+        this.sherlockSuspect = sherlockSuspect;
+    }
+
+    public int getSherlockPos() {
+        return sherlockPos;
+    }
+
+    public void setSherlockPos(int sherlockPos) {
+        this.sherlockPos = sherlockPos;
     }
 }

@@ -41,12 +41,21 @@ public class GameController {
         controllerParams.randomKillerPos = Util.randomInRange(numPlayers);
         controllerParams.healerPos = Util.randomInRange(numPlayers, controllerParams.randomKillerPos);
 
+        List<Integer> sherlockExclusionList = new ArrayList<>();
+        sherlockExclusionList.add(controllerParams.randomKillerPos);
+        sherlockExclusionList.add(controllerParams.healerPos);
+        controllerParams.sherlockPos = Util.randomInRange(numPlayers, sherlockExclusionList);
+
+
         for(int i = 0 ; i < numPlayers ; i++){
             if(i == controllerParams.randomKillerPos){
                 controllerParams.getPlayerList().add(new Player(Role.KILLER));
             }
             else if(i == controllerParams.healerPos){
                 controllerParams.getPlayerList().add(new Player(Role.HEALER));
+            }
+            else if(i == controllerParams.sherlockPos){
+                controllerParams.getPlayerList().add(new Player(Role.SHERLOCK));
             }
             else {
                 controllerParams.getPlayerList().add(new Player(Role.INNOCENT));
@@ -82,15 +91,27 @@ public class GameController {
         for(int i = 0 ; i < numPlayers ; i++){
             suspectExceptionList.clear();
             Player currentPlayer = controllerParams.getPlayerList().get(i);
-            if( (currentPlayer.getState() == State.ALIVE) && (currentPlayer.getRole() == Role.INNOCENT || currentPlayer.getRole() == Role.HEALER) ){
+            if( (currentPlayer.getState() == State.ALIVE) && (currentPlayer.getRole() != Role.KILLER) ){
                 healerValidation(currentPlayer, suspectExceptionList);
                 suspectExceptionList.add(i);
                 suspectExceptionList.addAll(controllerParams.getKilledList());
                 if(suspectExceptionList.size() < numPlayers)
                 randomSuspect = Util.randomInRange(numPlayers, suspectExceptionList);
+
+                if(currentPlayer.getRole() == Role.SHERLOCK){
+                    if(randomSuspect != controllerParams.randomKillerPos){
+                        int previousSuspect = randomSuspect;
+                        randomSuspect = Util.randomInRange(numPlayers, previousSuspect);
+                    }
+
+                }
+
                 controllerParams.getPlayerList().get(i).setSuspects(randomSuspect);
                 controllerParams.suspectArr[randomSuspect] += 1;
-                System.out.println("P" + i + " suspects : " + randomSuspect);
+                if(currentPlayer.getRole() == Role.SHERLOCK)
+                    System.out.println("P" + i + " (Sherlock) suspects : " + randomSuspect);
+                else
+                    System.out.println("P" + i + " suspects : " + randomSuspect);
             }
         }
 
@@ -140,6 +161,5 @@ public class GameController {
         controllerParams.toBeHealed = Util.randomInRange(numPlayers, healingExceptionList);
         System.out.println("Healer selects P" + controllerParams.toBeHealed);
     }
-
 
 }

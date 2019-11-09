@@ -4,7 +4,8 @@ public enum Role {
 
     KILLER("killer"),
     INNOCENT("innocent"),
-    HEALER("healer");
+    HEALER("healer"),
+    SHERLOCK("sherlock");
 
     public String role;
 
