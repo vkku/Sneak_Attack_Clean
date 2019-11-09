@@ -29,13 +29,16 @@ public class GameController {
             System.out.println("Round " + (i+1));
             killInitialPlayer();
         }*/
-        killInitialPlayer();
-        voteSuspect();
+        //killInitialPlayer();
+        //voteSuspect();
         controllerParams.round = 0;
-        while( (controllerParams.killedList.size() < numPlayers) && !controllerParams.getKilledList().contains(controllerParams.randomKillerPos)){
-            killSuspects();
+        while(!controllerParams.getKilledList().contains(controllerParams.randomKillerPos) && (controllerParams.killedList.size() < numPlayers)){
+            System.out.println("** Round Starts **");
+            chooseToBeHealed();
             killInitialPlayer();
             voteSuspect();
+            killSuspects();
+            System.out.println("** Round Ends **");
         }
     }
 
@@ -83,7 +86,11 @@ public class GameController {
         Arrays.fill(controllerParams.suspectArr, 0);
         for(int i = 0 ; i < numPlayers ; i++){
             suspectExceptionList.clear();
-            if(controllerParams.getPlayerList().get(i).getState() == State.ALIVE){
+            Player currentPlayer = controllerParams.getPlayerList().get(i);
+            if( (currentPlayer.getState() == State.ALIVE) && (currentPlayer.getRole() == Role.INNOCENT || currentPlayer.getRole() == Role.HEALER) ){
+                if(currentPlayer.getRole() == Role.HEALER){
+                    suspectExceptionList.add(controllerParams.toBeHealed);
+                }
                 suspectExceptionList.add(i);
                 suspectExceptionList.addAll(controllerParams.getKilledList());
                 if(suspectExceptionList.size() < numPlayers)
@@ -106,18 +113,36 @@ public class GameController {
 
         System.out.println("The maximum suspect count is : " + controllerParams.maxFrequency.get(0));
 
-        for(int i = 0 ; i < controllerParams.maxFrequency.size() ; i++){
+        int maxFreq;
+        //for(int i = 0 ; i < controllerParams.maxFrequency.size() ; i++) {
             //HACK
-            int maxFreq = controllerParams.maxFrequency.get(0);
-            controllerParams.getKilledList().add(maxFreq);
-            controllerParams.getPlayerList().get(maxFreq).setState(State.DEAD);
-            if(controllerParams.randomKillerPos == maxFreq){
-                System.out.println("The killer P" + maxFreq + " has been suspected and killed in round " + controllerParams.round++);
+            maxFreq = controllerParams.maxFrequency.get(0);
+            if (controllerParams.toBeHealed != maxFreq) {
+                controllerParams.getKilledList().add(maxFreq);
+                controllerParams.getPlayerList().get(maxFreq).setState(State.DEAD);
+                controllerParams.round++;
+                if (controllerParams.randomKillerPos == maxFreq) {
+                    System.out.println("The killer P" + maxFreq + " has been suspected and killed in round " + controllerParams.round);
+                } else {
+                    System.out.println("The player P" + maxFreq + " has been suspected and killed in round " + controllerParams.round);
+                }
             }
-            else{
-            System.out.println("The player P" + maxFreq + " has been suspected and killed in round " + controllerParams.round++);
+            else if(maxFreq == controllerParams.toBeHealed){
+                if(controllerParams.getKilledList().contains(controllerParams.toBeHealed)){
+                    controllerParams.getKilledList().remove(controllerParams.toBeHealed);
+                    controllerParams.getPlayerList().get(controllerParams.toBeHealed).setState(State.ALIVE);
+                }
+                System.out.println("Player P" + controllerParams.toBeHealed + " is healed by healer");
             }
-        }
+        //}
+    }
+
+    public void chooseToBeHealed(){
+        List<Integer> healingExceptionList = new ArrayList<>();
+        healingExceptionList.add(controllerParams.randomKillerPos);
+        healingExceptionList.addAll(controllerParams.getKilledList());
+        controllerParams.toBeHealed = Util.randomInRange(numPlayers, healingExceptionList);
+        System.out.println("Healer selects P" + controllerParams.toBeHealed);
     }
 
 

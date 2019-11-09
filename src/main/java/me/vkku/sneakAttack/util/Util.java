@@ -50,7 +50,7 @@ public class Util {
                 }
             }
         }
-            maxFrequencies.addAll(Arrays.asList(maxIndex));
+            maxFrequencies.addAll(Arrays.asList(maxIndex, lastSaveIndex));
 
         return maxFrequencies;
     }

@@ -14,6 +14,7 @@ public class ControllerParams {
     int randomKillerPos;
     int healerPos;
     int round;
+    int toBeHealed;
 
     public List<Player> getPlayerList() {
         return playerList;
