@@ -31,7 +31,7 @@ public class Util {
         return randomInt;
     }
 
-    public static List<Integer> maxTwoFrequency(Integer arr[], int size){
+    /*public static List<Integer> maxTwoFrequency(Integer arr[], int size){
         List<Integer> maxFrequencies = new ArrayList<>();
         int countMax = 0;
         int lastCount = 0;
@@ -52,6 +52,25 @@ public class Util {
         }
         maxFrequencies.addAll(Arrays.asList(maxIndex, lastSaveIndex));
 
+        return maxFrequencies;
+    }*/
+
+    public static List<Integer> maxTwoFrequency(Integer arr[], int size){
+        List<Integer> maxFrequencies = new ArrayList<>();
+        int countMax = 0;
+        int maxIndex = 0;
+        for(int i = 0 ; i < size ; i++){
+            if(arr[i] > countMax){
+                countMax = arr[i];
+                maxIndex = i;
+            }
+        }
+        maxFrequencies.add(maxIndex);
+        for(int i = 0 ; i < size ; i++){
+            if(arr[i] == countMax){
+                maxFrequencies.add(i);
+            }
+        }
         return maxFrequencies;
     }
 }
